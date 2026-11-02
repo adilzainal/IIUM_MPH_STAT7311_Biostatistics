@@ -1,5 +1,6 @@
+setwd("~/Desktop/Medical Statistic/R MPH IIUM")
 #--------------------------------------------------------
-# Biostatistic MPH using R Software (2025) Week 6
+# Biostatistic MPH using R Software (2025)
 #--------------------------------------------------------
 # Muhammad Adil ZA Lecture 5
 #--------------------------------------------------------
@@ -45,11 +46,12 @@
 
 ## Tasks 
 # - Set the working directory (Files you want to use)
+setwd("~/Desktop/Medical Statistic/R MPH IIUM/stat7311")
 # - Install packages a.k.a libraries (Package)
 #   - psych, car
 install.packages("psych")  # by command
 install.packages("car")
-
+library(car)
 # Function, Library, Object
 
 ## Function, and functions comes with the packages that you install and put in the library.
@@ -89,11 +91,14 @@ sleep  # view data
 # - cholest.xlsx
 # Always make sure that you set the working directory first!
 data.csv = read.csv("healthstatus.csv")  # most natural way to open data in R
-library(foreign)  # library to read .sav (SPSS) and .dta (STATA) files
-data.sav = read.spss("healthstatus.sav", to.data.frame = TRUE)  #SPSS
-data.dta = read.dta("cholest.dta")  # STATA
+library(foreign)  # library to read.sav (SPSS) and .dta (STATA) files
+data.stata = read.dta("cholest.dta")  # STATA
 library(readxl)  # library to read excel files, must install first
 data.xls = read_excel("cholest.xlsx", sheet = 1)
+install.packages("haven")
+library(haven)
+# Reads the .sav file into a data frame / tibble
+data.sav <- read_sav("healthstatus.sav")
 
 # Handle data
 
@@ -116,9 +121,10 @@ View(data.sav)  # View, graphical way
 ## data type 
 # integer - 100
 # numeric - 0.01
-# character - "hello"
+# character - 'A'
+# string - "hello"
 # logical - TRUE
-# factor - "Green" "Blue"
+# factor - "Green" "Blue" or "0" and "1"
 
 ## creating
 # creating - c(), rep(), seq(), numeric()
@@ -127,14 +133,15 @@ View(data.sav)  # View, graphical way
 # combining c(), paste(), cbind(), rbind(), merge()
 
 #creating variables
-id <- c(1,2,3,4)
-gender <- c("1","2","1","2")
-age <- c(35,36,37,36)
+id <- c(1,2,3,4,5,6,7)
+gender <- c("1","2","1","2","1","2","1")
+age <- c(35,36,37,36,35,32,21)
 mph_data <- data.frame(id = id, Age = age, Gender = gender)
-mph_data$gender <- factor(mph_data$gender,
-                             levels = c(1, 2), # Original values in your data
+mph_data$Gender <- as.factor(mph_data$Gender)
+mph_data$Gender <- factor(mph_data$Gender,
+                          levels = c(1, 2), # Original values in your data
                              labels = c("Male", "Female")) # Desired labels
-values <- c(70,78,71,72)
+values <- c(70,78,71,72,90,98,67)
 mph_data$mark <- values
 
 ## The basic data types
@@ -171,19 +178,32 @@ str(data_matrix)  # shown as num
 #is.na allows you to logically test for NA values, for example when subsetting
 
 #merging dataset
-id <- c(1,2,3,4)
-gender <- c("M","F","M","F")
-age <- c(35,36,37,36)
+id <- c(1,2,3,4,5,6,7)
+gender <- c("1","2","1","2","1","2","1")
+age <- c(35,36,37,36,35,32,21)
 drph_data <- data.frame(id = id, Age = age, Gender = gender)
-values <- c(73,71,76,75)
-drph_data$mark <- values
+drph_data$Gender <- factor(drph_data$Gender,
+                          levels = c(1, 2), # Original values in your data
+                          labels = c("Male", "Female")) # Desired labels
+values2 <- c(73,71,76,75,71,71,73)
+drph_data$mark2 <- values2
 
-ppka_data <- merge(mph_data, drph_data, by="id")
-ppka_datas <- merge(mph_data, drph_data, by="id", "gender", "age")
+ppka_datas <- merge(mph_data,drph_data, by= c("id","Age","Gender"))
+
+library(dplyr)
+drph_data$gender <- recode(drph_data$gender, "Male" = 1, "Female" = 2)
+
+ethnicity <- c("Malay", "Chinese", "Indian","Malay", "Chinese", "Indian", "Malay")
+drph_data$ethnicity <- ethnicity
+drph_data$ethnicity <- recode(drph_data$ethnicity, "Malay" = 1, "Chinese" = 2, "Indian" = 3)
+drph_data$ethnicity <- factor(drph_data$ethnicity,
+                           levels = c(1, 2, 3), # Original values in your data
+                           labels = c("Malay", "Chinese", "Indian")) # Desired labels
 
 #long format and wideformat
 datawideformat = read.spss("wideformat.sav", to.data.frame = TRUE)  #SPSS
 install.packages("reshape")
+library(reshape)
 datalongformat <- reshape(datawideformat, 
                        # variable names for level one
                        varying=c("day1", "day2", "day3","day4"),
@@ -198,6 +218,14 @@ datalongformat <- reshape(datawideformat,
                        # direction to reshape
                        direction="long")
 
+datalongformat <- reshape(datawideformat, 
+                          varying=c("day1", "day2", "day3","day4"),
+                          v.names="rbs",
+                          timevar="day", 
+                          times=c(1, 2, 3, 4), 
+                          new.row.names=1:1000,
+                          direction="long")
+
 install.packages("tidyr")
 library(tidyr)
 wide_data <- datalongformat %>%
@@ -205,6 +233,10 @@ wide_data <- datalongformat %>%
     names_from = day,      # Column whose unique values become new column names
     values_from = rbs # Column whose values populate the new columns
   )
+
+
+wide_data <- datalongformat %>%
+  pivot_wider(names_from = day,values_from = rbs)
 
 #data entry using rstudio is not practical
 #use excel or spss 
@@ -215,5 +247,9 @@ write.csv(new.data, "newdata.csv")
 write.dta(new.data, "c:/newdata.dta")
 # SPSS
 write.foreign(new.data, "c:/newdata.txt", "c:/mydata.sps",   package="SPSS")
+# excel 
+install.packages("writexl")
+library(writexl)
+newdata <- write_xlsx(drph_data, "~/Desktop")
 
 # Q&A?
