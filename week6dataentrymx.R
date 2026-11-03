@@ -124,7 +124,7 @@ View(data.sav)  # View, graphical way
 # character - 'A'
 # string - "hello"
 # logical - TRUE
-# factor - "Green" "Blue" or "0" and "1"
+# factor is integer with level- "Male" "Female" as "0" and "1"
 
 ## creating
 # creating - c(), rep(), seq(), numeric()
@@ -132,7 +132,7 @@ View(data.sav)  # View, graphical way
 # converting - as.numeric(), as.character(), as.factor(), as.logical()
 # combining c(), paste(), cbind(), rbind(), merge()
 
-#creating variables
+#creating vector variable
 id <- c(1,2,3,4,5,6,7)
 gender <- c("1","2","1","2","1","2","1")
 age <- c(35,36,37,36,35,32,21)
@@ -151,6 +151,7 @@ str(data.sav)
 # - basically a variable in R is a VECTOR
 data_num = c(1,2,3,4,5); str(data_num)
 data_cat = factor( c("M", "F", "M", "F", "M") ); str(data_cat)
+levels(data_cat) # to know the level
 # - use ";" to write two lines of short commands into one
 
 ## The basic containers
@@ -166,6 +167,36 @@ matrix(data = c(data_num, data_cat), nrow = 5, ncol = 2)
 data_matrix = matrix(data = c(data_num, data_cat), nrow = 5, ncol = 2)
 data_matrix
 str(data_matrix)  # shown as num
+
+#Data frame - 2 dimension, but list of 1 dimension vector
+
+df <- data.frame(
+  Name = c("Alice", "Bob"),
+  Age  = c(25, 30)
+)
+
+dim(df)
+# [1] 2 2   <-- 2 dimensions: 2 rows and 2 columns
+
+df[1, 2]
+# [1] 25    <-- Row 1, Column 2
+
+#Matrix - 2 dimension but homogenous data 
+
+# Start with a simple 1D vector of 6 numbers
+v <- c(10, 20, 30, 40, 50, 60)
+is.matrix(v)  # FALSE
+dim(v)        # NULL
+
+# Attach a dimension attribute: 2 rows, 3 columns
+dim(v) <- c(2, 3)
+
+# Now it is officially a matrix!
+is.matrix(v)  # TRUE
+print(v)
+#      [,1] [,2] [,3]
+# [1,]   10   30   50
+# [2,]   20   40   60
 
 #Missing values
 #R handles missing values differently than some other programs, including Stata. Missing values will appear as NA (whereas in Stata these will appear as large numeric values). Note, though, that NA is not a string, it is a symbol. If you try to conduct logical tests with NA, you are likely to get errors or NULL.
