@@ -110,6 +110,8 @@ describe(data.sav$age)
 describeBy(data.sav$age, data.sav$sex)
 describeBy(age,exercise)
 
+install.packages("dplyr")
+library(dplyr)
 data.sav %>%
   group_by(smoking, sex) %>%
   summarise(
