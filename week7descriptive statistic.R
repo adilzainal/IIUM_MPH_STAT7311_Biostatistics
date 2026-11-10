@@ -18,6 +18,14 @@ data.sav = read.spss("dataedited.sav", to.data.frame = TRUE)
 missmap(data.sav, main = "Missing values vs observed")
 #You can add the argument na.rm=TRUE to calculate the result while ignoring the missing values.
 
+#Prepare variable for analysis
+attach(data.sav)
+data.sav$bmivalue <- (wt/(ht/100)/(ht/100))
+attach(data.sav)
+data.sav$bmivalue <- round(bmivalue, digits = 1)
+data.sav$bmiclasses <- cut(data.sav$bmivalue, 
+  breaks = c(-Inf, 18.49, 23.49, Inf), labels = c("UW", "N", "OWB"))
+
 #Explore dataset
 healthstatus = read.spss("healthstatus.sav", to.data.frame = TRUE)
 summary(data.sav)
