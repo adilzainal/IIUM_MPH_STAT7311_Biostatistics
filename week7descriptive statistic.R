@@ -50,17 +50,6 @@ install.packages("pastecs")
 library(pastecs)
 stat.desc(data.sav$age) #for normal data
 round(stat.desc(data.sav), digits =1)
-#crosstabulate for continuous data
-library(psych)
-describe(data.sav$age)
-describeBy(data.sav$age, data.sav$sex)
-describeBy(age,exercise)
-
-data.sav %>%
-  group_by(smoking, sex) %>%
-  summarise(
-    mean_continuous = mean(age, na.rm = TRUE),
-    sd_continuous = sd(age, na.rm = TRUE),)
 
 #Ttbl_strata2()#Table
 # 2-Way Frequency Table 
@@ -114,6 +103,18 @@ mytable3 <- table(sex, exercise, smoking)
 ftable(mytable3)
 tbl3 <- prop.table(mytable3, 2)
 round(tbl3, digits = 2) 
+
+#crosstabulate for continuous data
+library(psych)
+describe(data.sav$age)
+describeBy(data.sav$age, data.sav$sex)
+describeBy(age,exercise)
+
+data.sav %>%
+  group_by(smoking, sex) %>%
+  summarise(
+    mean_continuous = mean(age, na.rm = TRUE),
+    sd_continuous = sd(age, na.rm = TRUE),)
 
 #normality check for a continuous variable can be determine using statistically and graphically
 #statistically
