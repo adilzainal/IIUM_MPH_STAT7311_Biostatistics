@@ -11,6 +11,9 @@
 #missing data
 library(Amelia)
 library(Rcpp)
+library(foreign)
+install.packages("foreign")
+setwd("~/Desktop/Medical Statistic/R MPH IIUM/stat7311")
 data.sav = read.spss("dataedited.sav", to.data.frame = TRUE)
 missmap(data.sav, main = "Missing values vs observed")
 #You can add the argument na.rm=TRUE to calculate the result while ignoring the missing values.
