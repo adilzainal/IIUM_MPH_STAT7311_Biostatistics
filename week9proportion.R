@@ -126,7 +126,7 @@ print(paste("Total discordant pairs:", total_discordant))
 
 #if discordant pair less than 25 use exact mcnemar test
 
-install.packages(exact2x2)
+install.packages("exact2x2")
 library(exact2x2)
 mcnemar.exact(HPTbtw)
 ########################################################################################
