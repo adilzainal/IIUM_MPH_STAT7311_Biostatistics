@@ -6,13 +6,13 @@
 # Bivariate data analysis
 #--------------------------------------------------------
 
-# 1. chi square test 
-# 2. yates and fisher exact
-# 3. chi square test for trend (Cochran-Armitage trend test)
-# 4. mcnemar test
-# 5. cochran q test
-# 6. Proportion z test compare 2 proportion with 95% ci
-# measure 95% ci
+# 1. chi square test (association,unpair data, nominal)
+# 2. yates and fisher exact (association, unpair, nominal, but violated chi square assumption)
+# 3. chi square test for trend (Cochran-Armitage trend test) (association, unpair, ordinal)
+# 4. mcnemar test (association, pair data, but 2 pair)
+# 5. cochran q test (association pair data, but >2 pair)
+# 6. Proportion z test compare 2 proportion with 95% ci (compare proportion instead of association)
+# 7. measure 95% ci (method to estimate confidence interval for proportion)
 
 ########################################################################################
 
